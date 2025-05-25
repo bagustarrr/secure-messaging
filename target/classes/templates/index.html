@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Добро пожаловать | Secure Messaging</title>
+  <link rel="stylesheet" href="css/messenger-style.css" />
+  <style>
+    .welcome-section {
+      text-align: center;
+      padding: 4rem 2rem;
+    }
+
+    .welcome-section h1 {
+      font-size: 2.5rem;
+      color: var(--primary);
+      margin-bottom: 1rem;
+    }
+
+    .welcome-section p {
+      font-size: 1.1rem;
+      color: #444;
+      max-width: 600px;
+      margin: 0 auto 2rem;
+    }
+
+    .cta-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .cta-buttons a {
+      background: var(--accent);
+      color: white;
+      padding: 0.8rem 1.5rem;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background 0.3s ease;
+    }
+
+    .cta-buttons a:hover {
+      background: #1ebe5d;
+    }
+
+    @media (max-width: 600px) {
+      .welcome-section h1 {
+        font-size: 1.8rem;
+      }
+
+      .cta-buttons {
+        flex-direction: column;
+      }
+
+      .cta-buttons a {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header class="navbar">
+  <div class="logo">SecureMsg</div>
+  <nav>
+    <a href="/login">Вход</a>
+    <a href="/register">Регистрация</a>
+  </nav>
+</header>
+
+<main class="welcome-section">
+  <h1>Добро пожаловать в Secure Messaging</h1>
+  <p>Защищённое и современное приложение для общения между студентами и преподавателями. Всё под контролем, всё зашифровано.</p>
+
+  <div class="cta-buttons">
+    <a href="/login">Войти</a>
+    <a href="/register">Создать аккаунт</a>
+  </div>
+</main>
+
+<footer>
+  &copy; 2025 Secure Messaging — Общайся безопасно 🤝
+</footer>
+
+</body>
+</html>

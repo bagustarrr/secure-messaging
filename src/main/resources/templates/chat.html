@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>SecureMsg – Chat</title>
+    <!-- Load Bootstrap according to theme -->
+    <th:block th:if="${currentUser.theme} == 'light'">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" />
+    </th:block>
+    <th:block th:if="${currentUser.theme} != 'light'">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5.1.3/dist/darkly/bootstrap.min.css" />
+    </th:block>
+    <link th:href="@{/css/style.css}" rel="stylesheet" />
+</head>
+<body th:classappend="${currentUser.theme} == 'light' ? 'light' : 'dark'">
+<!-- Top navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">SecureMsg</a>
+        <div class="d-flex ms-auto">
+            <span class="navbar-text text-light me-3" th:text="${currentUser.fullName}">User Name</span>
+            <a class="btn btn-sm btn-outline-light me-2" th:href="@{/profile}">Profile</a>
+            <a class="btn btn-sm btn-outline-light me-2" th:if="${currentUser.role != 'STUDENT'}" th:href="@{/admin}">Admin</a>
+            <a class="btn btn-sm btn-outline-light" th:href="@{/logout}">Logout</a>
+        </div>
+    </div>
+</nav>
+<!-- Chat page layout -->
+<div class="chat-container d-flex">
+    <!-- Sidebar Section -->
+    <div id="sidebar" class="sidebar bg-dark text-light">
+        <h5 class="p-3">My Chats</h5>
+        <ul class="list-group list-group-flush">
+            <li th:each="chat : ${chats}"
+                th:classappend="${selectedChat != null and chat.id == selectedChat.id} ? 'active' : ''"
+                class="list-group-item list-group-item-action bg-dark text-light"
+                style="cursor:pointer;"
+                th:onclick="'window.location.href=\'/chat/' + ${chat.id} + '\';"
+                th:text="${chat.type == 'GROUP'} ? ${chat.name} : ${#lists.size(chat.participants) == 2} ? ${#strings.arrayJoin(#arrays.filter(chat.participants, i -> i != currentUser.iin), ', ')} : 'Private Chat'">
+                <!-- The expression above attempts to display group name or other user's IIN -->
+            </li>
+            <!-- If needed, could refine to show other user's name instead of IIN for private chats via a lookup -->
+        </ul>
+        <div class="p-3 border-top">
+            <h6>Start new chat</h6>
+            <form th:action="@{/chat/new}" method="post" class="d-flex">
+                <input type="text" name="otherIIN" class="form-control form-control-sm me-2" placeholder="Enter user IIN" />
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                <button type="submit" class="btn btn-sm btn-primary">Start</button>
+            </form>
+            <div th:if="${param.errorUserNotFound}" class="text-danger small mt-1">User not found.</div>
+            <div th:if="${param.errorSelf}" class="text-danger small mt-1">Cannot chat with yourself.</div>
+        </div>
+        <!-- Mobile: close sidebar button -->
+        <button id="closeSidebar" class="btn btn-secondary d-block d-md-none m-2">Close</button>
+    </div>
+
+    <!-- Chat Content Section -->
+    <div class="chat-content flex-grow-1 d-flex flex-column">
+        <!-- Toggle button for mobile to open sidebar -->
+        <button id="toggleSidebar" class="btn btn-outline-secondary d-block d-md-none m-2">☰ Chats</button>
+        <div class="chat-header p-3 border-bottom">
+            <h5 th:text="${selectedChat != null} ? ${chatTitle} : 'Secure Messaging'"></h5>
+        </div>
+        <div class="messages flex-grow-1 p-3" th:if="${selectedChat == null}">
+            <!-- Placeholder when no chat is selected -->
+            <div class="text-muted">Select a chat from the sidebar or start a new conversation.</div>
+        </div>
+        <div class="messages flex-grow-1 p-3 overflow-auto" th:if="${selectedChat != null}" id="messageArea">
+            <!-- Message history -->
+            <div th:each="msg : ${messages}"
+                 th:text="${msg.sender == currentUser.iin} ? 'You: ' + ${msg.content} : ${#dates.format(msg.timestamp, 'HH:mm')} + ' ' + ${msg.sender} + ': ' + ${msg.content}"
+                 th:classappend="${msg.sender == currentUser.iin} ? 'message my-message' : 'message their-message'">
+                <!-- The above will display "You: ...", or "SenderName: ...". (For simplicity using sender IIN as name if no name is loaded) -->
+            </div>
+        </div>
+        <div class="chat-input p-3 border-top" th:if="${selectedChat != null}">
+            <form id="messageForm" onsubmit="sendMessage(); return false;" class="d-flex">
+                <input type="text" id="messageInput" class="form-control me-2" placeholder="Type a message..." autocomplete="off" />
+                <button type="submit" class="btn btn-primary">Send</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Pass server-side data to JS (chat id, type, current user) -->
+<div id="chatInfo"
+     th:data-chat-id="${selectedChat != null} ? ${selectedChat.id} : ''"
+     th:data-chat-type="${selectedChat != null} ? ${selectedChat.type} : ''"
+     th:data-current-user="${currentUser.iin}">
+</div>
+
+<script th:src="@{/js/chat.js}"></script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Пользователи | Secure Messaging</title>
+    <link rel="stylesheet" href="css/messenger-style.css" />
+    <style>
+        .user-list {
+          max-width: 600px;
+          margin: 2rem auto;
+          background: #fff;
+          border-radius: 10px;
+          box-shadow: 0 0 10px rgba(0,0,0,0.05);
+          overflow: hidden;
+        }
+
+        .user-list h2 {
+          text-align: center;
+          padding: 1rem;
+          background: var(--primary);
+          color: white;
+          margin: 0;
+        }
+
+        .user-item {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 1rem;
+          border-bottom: 1px solid #eee;
+        }
+
+        .user-item:last-child {
+          border-bottom: none;
+        }
+
+        .user-info {
+          display: flex;
+          flex-direction: column;
+        }
+
+        .user-role {
+          font-size: 0.85rem;
+          color: #888;
+        }
+
+        .chat-btn {
+          background: var(--accent);
+          border: none;
+          padding: 0.5rem 1rem;
+          color: white;
+          border-radius: 8px;
+          font-weight: bold;
+          cursor: pointer;
+        }
+
+        @media (max-width: 600px) {
+          .user-item {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+          }
+
+          .chat-btn {
+            width: 100%;
+          }
+        }
+    </style>
+</head>
+<body>
+
+<header class="navbar">
+    <div class="logo">SecureMsg</div>
+    <nav>
+        <a href="/chat">Чат</a>
+        <a href="/profile">Профиль</a>
+        <a href="/logout">Выход</a>
+    </nav>
+</header>
+
+<main class="user-list">
+    <h2>Список пользователей</h2>
+
+    <div class="user-item">
+        <div class="user-info">
+            <strong>Преподаватель 1</strong>
+            <span class="user-role">преподаватель</span>
+        </div>
+        <button class="chat-btn" onclick="location.href='/chat?to=teacher1'">Открыть чат</button>
+    </div>
+
+    <div class="user-item">
+        <div class="user-info">
+            <strong>Студент А</strong>
+            <span class="user-role">студент</span>
+        </div>
+        <button class="chat-btn" onclick="location.href='/chat?to=studentA'">Открыть чат</button>
+    </div>
+
+    <div class="user-item">
+        <div class="user-info">
+            <strong>Админ</strong>
+            <span class="user-role">администратор</span>
+        </div>
+        <button class="chat-btn" onclick="location.href='/chat?to=admin'">Открыть чат</button>
+    </div>
+
+    <!-- Здесь можно подключить Thymeleaf или JS для динамического списка -->
+</main>
+
+<footer>
+    &copy; 2025 Secure Messaging
+</footer>
+
+</body>
+</html>
